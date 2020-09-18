@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дмитрий Филюков](https://up.htmlacademy.ru/javascript/21/user/79521).
-* Наставник: `Неизвестно`.
+* Наставник: [Алекс Хабиров](https://htmlacademy.ru/profile/alex_khab).
 
 ---
 
