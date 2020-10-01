@@ -100,7 +100,7 @@ const getOffersData = (offerAmount) => {
         checkin: CHECKIN[getRandomArrayIndex(CHECKIN)],
         checkout: CHECKOUT[getRandomArrayIndex(CHECKOUT)],
         features: makeNewRandomArray(FEATURES),
-        description: 'Описание обьекта',
+        description: 'Описание обьекта', // ЛЕНЬ ПИСАТЬ БЫЛО
         photos: makePhotosArray()
       },
       location: {
@@ -119,8 +119,8 @@ const makePin = (offerData) => {
   const node = pinTemplate.cloneNode(true);
   const pinImg = node.querySelector(`img`);
 
-  node.style.left = 'BLA-BLA-BLA';
-  node.style.top = 'BLA-BLA-BLA';
+  node.style.left = 'BLA-BLA-BLA'; // НЕ ЯСНО, ЧТО ХОТЯТ В ТЗ
+  node.style.top = 'BLA-BLA-BLA'; // НЕ ЯСНО, ЧТО ХОТЯТ В ТЗ
   pinImg.src = offerData.author.avatar;
   pinImg.alt = offerData.offer.title;
 
