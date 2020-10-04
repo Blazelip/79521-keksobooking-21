@@ -31,6 +31,13 @@ const TYPES = [
   `bungalo`
 ];
 
+const TYPES_MAP = {
+  palace: `Дворец`,
+  flat: `Квартира`,
+  house: `Дом`,
+  bungalo: `Бунгало`
+};
+
 const FEATURES = [
   `wifi`,
   `dishwasher`,
@@ -52,12 +59,16 @@ const CHECKOUT = [
   `14:00`
 ];
 
+const map = document.querySelector(`.map`);
+const pinBoard = document.querySelector(`.map__pins`);
+const mapFilters = map.querySelector(`.map__filters-container`);
+
 const pinTemplate = document.getElementById(`pin`)
   .content
   .querySelector(`.map__pin`);
-const pinBoard = document.querySelector(`.map__pins`);
-
-const map = document.querySelector(`.map`);
+const cardTemplate = document.getElementById(`card`)
+  .content
+  .querySelector(`.map__card`);
 
 const MIN_LOCATION_X = 0;
 const maxLocationX = map.offsetWidth;
@@ -72,23 +83,20 @@ const getRandomArrayElement = (array) => {
   return array[Math.floor(Math.random() * array.length)];
 };
 
+
 const shuffleArray = (array) => {
-  let i = array.length;
-
-  while (i !== 0) {
-    const randomIndex = Math.floor(Math.random() * i);
-    i -= 1;
-
-    const temporaryValue = array[i];
-    array[i] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
   }
 
   return array;
 };
 
 const getRandomArray = (array) => {
-  return shuffleArray(array).slice(getRandomInteger(0, array.length));
+  return shuffleArray(array).slice(getRandomInteger(0, array.length - 1));
 };
 
 const makePhotosArray = () => {
@@ -140,8 +148,8 @@ const makePin = (offerData) => {
   const node = pinTemplate.cloneNode(true);
   const pinImg = node.querySelector(`img`);
 
-  node.style.left = `${offerData.location.x}` - PIN_WIDTH / 2 + `px`;
-  node.style.top = `${offerData.location.y}` - PIN_HEIGHT + `px`;
+  node.style.left = `${offerData.location.x - PIN_WIDTH / 2}px`;
+  node.style.top = `${offerData.location.y - PIN_HEIGHT}px`;
   pinImg.src = offerData.author.avatar;
   pinImg.alt = offerData.offer.title;
 
@@ -159,7 +167,57 @@ const renderPins = (offers) => {
   pinBoard.appendChild(fragment);
 };
 
-const pinsData = getOffersData(OFFER_AMOUNT);
-renderPins(pinsData);
+const makeOfferFeatures = (offerData, node) => {
+  const featuresList = node.querySelector(`.popup__features`);
+  featuresList.innerHTML = ``;
+
+  for (let i = 0; i < offerData.offer.features.length; i++) {
+    const listItem = document.createElement(`li`);
+
+    listItem.classList.add(`popup__feature`, `popup__feature--${offerData.offer.features[i]}`);
+
+    featuresList.appendChild(listItem);
+  }
+};
+
+const makeOfferPhotos = (offerData, node) => {
+  const photosList = node.querySelector(`.popup__photos`);
+  const photoTemplate = photosList.children[0];
+  photoTemplate.src = offerData.offer.photos[0];
+
+  const copiedPhoto = photoTemplate.cloneNode(true);
+
+  for (let i = 1; i < offerData.offer.photos.length; i++) {
+    copiedPhoto.src = `${offerData.offer.photos[i]}`;
+
+    photosList.appendChild(copiedPhoto);
+  }
+};
+
+const makeCard = (offerData) => {
+  const node = cardTemplate.cloneNode(true);
+
+  node.querySelector(`.popup__title`).textContent = offerData.offer.title;
+  node.querySelector(`.popup__text--address`).textContent = offerData.offer.address;
+  node.querySelector(`.popup__text--price`).textContent = `${offerData.offer.price}₽/ночь`;
+  node.querySelector(`.popup__type`).textContent = TYPES_MAP[offerData.offer.type];
+  node.querySelector(`.popup__text--capacity`).textContent = `${offerData.offer.rooms} комнаты для ${offerData.offer.guests} гостей`;
+  node.querySelector(`.popup__text--time`).textContent = `Заезд после ${offerData.offer.checkin}, выезд до ${offerData.offer.checkout}.`;
+  node.querySelector(`.popup__description`).textContent = offerData.offer.description;
+  node.querySelector(`.popup__avatar`).src = offerData.author.avatar;
+
+  makeOfferFeatures(offerData, node);
+  makeOfferPhotos(offerData, node);
+
+  return node;
+};
+
+const renderCards = (offers) => {
+  map.insertBefore(makeCard(offers[0]), mapFilters);
+};
 
 map.classList.remove(`map--faded`);
+
+const pinsData = getOffersData(OFFER_AMOUNT);
+renderPins(pinsData);
+renderCards(pinsData);
