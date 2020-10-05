@@ -8,7 +8,7 @@ const ROOMS_MAX = 4;
 const GUESTS_MIN = 1;
 const GUESTS_MAX = 5;
 const PHOTOS_AMOUNT_MIN = 1;
-const PHOTOS_AMOUNT_MAX = 10;
+const PHOTOS_AMOUNT_MAX = 3;
 
 const PIN_WIDTH = 50;
 const PIN_HEIGHT = 70;
@@ -28,14 +28,14 @@ const TYPES = [
   `palace`,
   `flat`,
   `house`,
-  `bungalo`
+  `bungalow`
 ];
 
-const TYPES_MAP = {
+const typesMap = {
   palace: `Дворец`,
   flat: `Квартира`,
   house: `Дом`,
-  bungalo: `Бунгало`
+  bungalow: `Бунгало`
 };
 
 const FEATURES = [
@@ -83,16 +83,17 @@ const getRandomArrayElement = (array) => {
   return array[Math.floor(Math.random() * array.length)];
 };
 
-
 const shuffleArray = (array) => {
-  for (let i = array.length - 1; i > 0; i--) {
+  const copiedArray = array.slice();
+
+  for (let i = copiedArray.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    const temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
+    const temp = copiedArray[i];
+    copiedArray[i] = copiedArray[j];
+    copiedArray[j] = temp;
   }
 
-  return array;
+  return copiedArray;
 };
 
 const getRandomArray = (array) => {
@@ -108,7 +109,6 @@ const makePhotosArray = () => {
 
   return photos;
 };
-
 
 const getOffersData = (offerAmount) => {
   const offersData = [];
@@ -167,49 +167,110 @@ const renderPins = (offers) => {
   pinBoard.appendChild(fragment);
 };
 
-const makeOfferFeatures = (offerData, node) => {
-  const featuresList = node.querySelector(`.popup__features`);
+const makeOfferFeatures = (features, card) => {
+  const featuresList = card.querySelector(`.popup__features`);
   featuresList.innerHTML = ``;
 
-  for (let i = 0; i < offerData.offer.features.length; i++) {
+  features.forEach((feature) => {
     const listItem = document.createElement(`li`);
 
-    listItem.classList.add(`popup__feature`, `popup__feature--${offerData.offer.features[i]}`);
+    listItem.classList.add(`popup__feature`, `popup__feature--${feature}`);
 
     featuresList.appendChild(listItem);
-  }
+  });
+
 };
 
-const makeOfferPhotos = (offerData, node) => {
-  const photosList = node.querySelector(`.popup__photos`);
-  const photoTemplate = photosList.children[0];
-  photoTemplate.src = offerData.offer.photos[0];
+const makeOfferPhotos = (photos, card) => {
+  const photosList = card.querySelector(`.popup__photos`);
+  const photoTemplate = photosList.querySelector(`.popup__photo`);
 
-  const copiedPhoto = photoTemplate.cloneNode(true);
+  photosList.innerHTML = ``;
 
-  for (let i = 1; i < offerData.offer.photos.length; i++) {
-    copiedPhoto.src = `${offerData.offer.photos[i]}`;
+  photos.forEach((photo) => {
+    const copiedPhoto = photoTemplate.cloneNode(true);
 
+    copiedPhoto.src = `${photo}`;
     photosList.appendChild(copiedPhoto);
+  });
+};
+
+const checkNullInCard = (card) => {
+  const elements = card.children;
+  for (let child of elements) {
+    if (child.classList.contains(`popup__features`)) {
+      const listItems = child.children;
+      console.log(listItems);
+
+      // listItems.forEach(function (listItem) {
+      //   if (listItem.textContent === ``) {
+      //     child.removeChild(listItem);
+      //   }
+      // });
+
+      for (let listItem of listItems) {
+        if (listItem.textContent === ``) {
+          child.removeChild(listItem);
+        }
+      }
+
+    } else if (child.classList.contains(`popup__photos`)) {
+      const images = child.children;
+      console.log(images);
+
+      // images.forEach(function (image) {
+      //   if (image.src === undefined) {
+      //     child.removeChild(image);
+      //   }
+      // });
+
+      for (let image of images) {
+        if (image.src === undefined) {
+          child.removeChild(image);
+        }
+      }
+    } else {
+      if (child.src === undefined && child.textContent === ``) {
+        card.removeChild(child);
+      }
+    }
   }
 };
 
 const makeCard = (offerData) => {
-  const node = cardTemplate.cloneNode(true);
+  const {offer, author} = offerData;
+  const {
+    title,
+    address,
+    price,
+    type,
+    rooms,
+    guests,
+    checkin,
+    checkout,
+    description,
+    features,
+    photos
+  } = offer;
+  const {avatar} = author;
 
-  node.querySelector(`.popup__title`).textContent = offerData.offer.title;
-  node.querySelector(`.popup__text--address`).textContent = offerData.offer.address;
-  node.querySelector(`.popup__text--price`).textContent = `${offerData.offer.price}₽/ночь`;
-  node.querySelector(`.popup__type`).textContent = TYPES_MAP[offerData.offer.type];
-  node.querySelector(`.popup__text--capacity`).textContent = `${offerData.offer.rooms} комнаты для ${offerData.offer.guests} гостей`;
-  node.querySelector(`.popup__text--time`).textContent = `Заезд после ${offerData.offer.checkin}, выезд до ${offerData.offer.checkout}.`;
-  node.querySelector(`.popup__description`).textContent = offerData.offer.description;
-  node.querySelector(`.popup__avatar`).src = offerData.author.avatar;
+  const card = cardTemplate.cloneNode(true);
 
-  makeOfferFeatures(offerData, node);
-  makeOfferPhotos(offerData, node);
+  card.querySelector(`.popup__title`).textContent = title;
+  card.querySelector(`.popup__text--address`).textContent = address;
+  card.querySelector(`.popup__text--price`).textContent = `${price}₽/ночь`;
+  card.querySelector(`.popup__type`).textContent = typesMap[type];
+  card.querySelector(`.popup__text--capacity`).textContent = `${rooms} комнаты для ${guests} гостей`;
+  card.querySelector(`.popup__text--time`).textContent = `Заезд после ${checkin}, выезд до ${checkout}.`;
+  card.querySelector(`.popup__description`).textContent = description;
+  card.querySelector(`.popup__avatar`).src = avatar;
 
-  return node;
+  makeOfferFeatures(features, card);
+  makeOfferPhotos(photos, card);
+
+  checkNullInCard(card);
+
+  return card;
 };
 
 const renderCards = (offers) => {
@@ -218,6 +279,37 @@ const renderCards = (offers) => {
 
 map.classList.remove(`map--faded`);
 
-const pinsData = getOffersData(OFFER_AMOUNT);
-renderPins(pinsData);
-renderCards(pinsData);
+const roomsData = getOffersData(OFFER_AMOUNT);
+renderPins(roomsData);
+renderCards(roomsData);
+
+// const test = makeCard(roomsData[0]);
+// console.log(test);
+
+// // const checkNullInCard = (card) = {
+// const elements1 = test.children;
+// console.log(elements1);
+
+// for (let child of elements1) {
+//   if (child.classList.contains(`popup__features`)) {
+//     const listItems = child.children;
+
+//     listItems.forEach((listItem) => {
+//       if (listItem.textContent === ``) {
+//         child.removeChild(listItem);
+//       }
+//     });
+//   } else if (child.classList.contains(`popup__photos`)) {
+//     const images = child.children;
+
+//     images.forEach((image) => {
+//       if (image.src === undefined) {
+//         child.removeChild(image);
+//       }
+//     });
+//   } else {
+//     if (child.src === undefined && child.textContent === ``) {
+//       card.removeChild(child);
+//     }
+//   }
+// }
