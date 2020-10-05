@@ -8,7 +8,7 @@ const ROOMS_MAX = 4;
 const GUESTS_MIN = 1;
 const GUESTS_MAX = 5;
 const PHOTOS_AMOUNT_MIN = 1;
-const PHOTOS_AMOUNT_MAX = 10;
+const PHOTOS_AMOUNT_MAX = 3;
 
 const PIN_WIDTH = 50;
 const PIN_HEIGHT = 70;
@@ -28,8 +28,15 @@ const TYPES = [
   `palace`,
   `flat`,
   `house`,
-  `bungalo`
+  `bungalow`
 ];
+
+const typesMap = {
+  palace: `Дворец`,
+  flat: `Квартира`,
+  house: `Дом`,
+  bungalow: `Бунгало`
+};
 
 const FEATURES = [
   `wifi`,
@@ -52,12 +59,16 @@ const CHECKOUT = [
   `14:00`
 ];
 
+const map = document.querySelector(`.map`);
+const pinBoard = document.querySelector(`.map__pins`);
+const mapFilters = map.querySelector(`.map__filters-container`);
+
 const pinTemplate = document.getElementById(`pin`)
   .content
   .querySelector(`.map__pin`);
-const pinBoard = document.querySelector(`.map__pins`);
-
-const map = document.querySelector(`.map`);
+const cardTemplate = document.getElementById(`card`)
+  .content
+  .querySelector(`.map__card`);
 
 const MIN_LOCATION_X = 0;
 const maxLocationX = map.offsetWidth;
@@ -73,22 +84,20 @@ const getRandomArrayElement = (array) => {
 };
 
 const shuffleArray = (array) => {
-  let i = array.length;
+  const copiedArray = array.slice();
 
-  while (i !== 0) {
-    const randomIndex = Math.floor(Math.random() * i);
-    i -= 1;
-
-    const temporaryValue = array[i];
-    array[i] = array[randomIndex];
-    array[randomIndex] = temporaryValue;
+  for (let i = copiedArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = copiedArray[i];
+    copiedArray[i] = copiedArray[j];
+    copiedArray[j] = temp;
   }
 
-  return array;
+  return copiedArray;
 };
 
 const getRandomArray = (array) => {
-  return shuffleArray(array).slice(getRandomInteger(0, array.length));
+  return shuffleArray(array).slice(getRandomInteger(0, array.length - 1));
 };
 
 const makePhotosArray = () => {
@@ -100,7 +109,6 @@ const makePhotosArray = () => {
 
   return photos;
 };
-
 
 const getOffersData = (offerAmount) => {
   const offersData = [];
@@ -140,8 +148,8 @@ const makePin = (offerData) => {
   const node = pinTemplate.cloneNode(true);
   const pinImg = node.querySelector(`img`);
 
-  node.style.left = `${offerData.location.x}` - PIN_WIDTH / 2 + `px`;
-  node.style.top = `${offerData.location.y}` - PIN_HEIGHT + `px`;
+  node.style.left = `${offerData.location.x - PIN_WIDTH / 2}px`;
+  node.style.top = `${offerData.location.y - PIN_HEIGHT}px`;
   pinImg.src = offerData.author.avatar;
   pinImg.alt = offerData.offer.title;
 
@@ -159,7 +167,94 @@ const renderPins = (offers) => {
   pinBoard.appendChild(fragment);
 };
 
-const pinsData = getOffersData(OFFER_AMOUNT);
-renderPins(pinsData);
+const makeOfferFeatures = (features, card) => {
+  const featuresList = card.querySelector(`.popup__features`);
+  featuresList.innerHTML = ``;
+
+  features.forEach((feature) => {
+    const listItem = document.createElement(`li`);
+
+    listItem.classList.add(`popup__feature`, `popup__feature--${feature}`);
+
+    featuresList.appendChild(listItem);
+  });
+
+};
+
+const makeOfferPhotos = (photos, card) => {
+  const photosList = card.querySelector(`.popup__photos`);
+  const photoTemplate = photosList.querySelector(`.popup__photo`);
+
+  photosList.innerHTML = ``;
+
+  photos.forEach((photo) => {
+    const copiedPhoto = photoTemplate.cloneNode(true);
+
+    copiedPhoto.src = `${photo}`;
+    photosList.appendChild(copiedPhoto);
+  });
+};
+
+const checkNullInCard = (card) => {
+  const elements = card.children;
+  const filteredElems = Array.from(elements).filter((item) => {
+    return item.tagName !== `IMG`;
+  });
+
+  for (let child of filteredElems) {
+    if (child.innerHTML === `` && child.textContent === ``) {
+      card.removeChild(child);
+    }
+  }
+};
+
+const makeCard = (offerData) => {
+  const {offer, author} = offerData;
+  const {
+    title,
+    address,
+    price,
+    type,
+    rooms,
+    guests,
+    checkin,
+    checkout,
+    description,
+    features,
+    photos
+  } = offer;
+  const {avatar} = author;
+
+  const card = cardTemplate.cloneNode(true);
+  const avatarImg = card.querySelector(`.popup__avatar`);
+
+  card.querySelector(`.popup__title`).textContent = title;
+  card.querySelector(`.popup__text--address`).textContent = address;
+  card.querySelector(`.popup__text--price`).textContent = `${price}₽/ночь`;
+  card.querySelector(`.popup__type`).textContent = typesMap[type];
+  card.querySelector(`.popup__text--capacity`).textContent = `${rooms} комнаты для ${guests} гостей`;
+  card.querySelector(`.popup__text--time`).textContent = `Заезд после ${checkin}, выезд до ${checkout}.`;
+  card.querySelector(`.popup__description`).textContent = description;
+  if (avatar) {
+    avatarImg.src = avatar;
+  } else {
+    card.removeChild(avatarImg);
+  }
+
+  makeOfferFeatures(features, card);
+  makeOfferPhotos(photos, card);
+
+  checkNullInCard(card);
+
+  return card;
+};
+
+const renderCards = (offers) => {
+  map.insertBefore(makeCard(offers[0]), mapFilters);
+};
 
 map.classList.remove(`map--faded`);
+
+const roomsData = getOffersData(OFFER_AMOUNT);
+renderPins(roomsData);
+renderCards(roomsData);
