@@ -197,42 +197,13 @@ const makeOfferPhotos = (photos, card) => {
 
 const checkNullInCard = (card) => {
   const elements = card.children;
-  for (let child of elements) {
-    if (child.classList.contains(`popup__features`)) {
-      const listItems = child.children;
-      console.log(listItems);
+  const filteredElems = Array.from(elements).filter((item) => {
+    return item.tagName !== `IMG`;
+  });
 
-      // listItems.forEach(function (listItem) {
-      //   if (listItem.textContent === ``) {
-      //     child.removeChild(listItem);
-      //   }
-      // });
-
-      for (let listItem of listItems) {
-        if (listItem.textContent === ``) {
-          child.removeChild(listItem);
-        }
-      }
-
-    } else if (child.classList.contains(`popup__photos`)) {
-      const images = child.children;
-      console.log(images);
-
-      // images.forEach(function (image) {
-      //   if (image.src === undefined) {
-      //     child.removeChild(image);
-      //   }
-      // });
-
-      for (let image of images) {
-        if (image.src === undefined) {
-          child.removeChild(image);
-        }
-      }
-    } else {
-      if (child.src === undefined && child.textContent === ``) {
-        card.removeChild(child);
-      }
+  for (let child of filteredElems) {
+    if (child.innerHTML === `` && child.textContent === ``) {
+      card.removeChild(child);
     }
   }
 };
@@ -255,6 +226,7 @@ const makeCard = (offerData) => {
   const {avatar} = author;
 
   const card = cardTemplate.cloneNode(true);
+  const avatarImg = card.querySelector(`.popup__avatar`);
 
   card.querySelector(`.popup__title`).textContent = title;
   card.querySelector(`.popup__text--address`).textContent = address;
@@ -263,7 +235,11 @@ const makeCard = (offerData) => {
   card.querySelector(`.popup__text--capacity`).textContent = `${rooms} комнаты для ${guests} гостей`;
   card.querySelector(`.popup__text--time`).textContent = `Заезд после ${checkin}, выезд до ${checkout}.`;
   card.querySelector(`.popup__description`).textContent = description;
-  card.querySelector(`.popup__avatar`).src = avatar;
+  if (avatar) {
+    avatarImg.src = avatar;
+  } else {
+    card.removeChild(avatarImg);
+  }
 
   makeOfferFeatures(features, card);
   makeOfferPhotos(photos, card);
@@ -282,34 +258,3 @@ map.classList.remove(`map--faded`);
 const roomsData = getOffersData(OFFER_AMOUNT);
 renderPins(roomsData);
 renderCards(roomsData);
-
-// const test = makeCard(roomsData[0]);
-// console.log(test);
-
-// // const checkNullInCard = (card) = {
-// const elements1 = test.children;
-// console.log(elements1);
-
-// for (let child of elements1) {
-//   if (child.classList.contains(`popup__features`)) {
-//     const listItems = child.children;
-
-//     listItems.forEach((listItem) => {
-//       if (listItem.textContent === ``) {
-//         child.removeChild(listItem);
-//       }
-//     });
-//   } else if (child.classList.contains(`popup__photos`)) {
-//     const images = child.children;
-
-//     images.forEach((image) => {
-//       if (image.src === undefined) {
-//         child.removeChild(image);
-//       }
-//     });
-//   } else {
-//     if (child.src === undefined && child.textContent === ``) {
-//       card.removeChild(child);
-//     }
-//   }
-// }
