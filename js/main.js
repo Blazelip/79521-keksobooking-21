@@ -13,6 +13,13 @@ const PHOTOS_AMOUNT_MAX = 3;
 const PIN_WIDTH = 50;
 const PIN_HEIGHT = 70;
 
+const MAIN_PIN_INACTIVE_WIDTH = 65;
+const MAIN_PIN_INACTIVE_HEIGHT = 65;
+const MAIN_PIN_ACTIVE_WIDTH = 65;
+const MAIN_PIN_ACTIVE_HEIGHT = 87;
+
+
+
 const TITLES = [
   `Большая уютная квартира`,
   `Маленькая неуютная квартира`,
@@ -148,8 +155,8 @@ const makePin = (offerData) => {
   const node = pinTemplate.cloneNode(true);
   const pinImg = node.querySelector(`img`);
 
-  node.style.left = `${offerData.location.x - PIN_WIDTH / 2}px`;
-  node.style.top = `${offerData.location.y - PIN_HEIGHT}px`;
+  node.style.left = `${offerData.location.x + PIN_WIDTH / 2}px`;
+  node.style.top = `${offerData.location.y + PIN_HEIGHT}px`;
   pinImg.src = offerData.author.avatar;
   pinImg.alt = offerData.offer.title;
 
@@ -253,8 +260,56 @@ const renderCards = (offers) => {
   map.insertBefore(makeCard(offers[0]), mapFilters);
 };
 
-map.classList.remove(`map--faded`);
 
 const roomsData = getOffersData(OFFER_AMOUNT);
-renderPins(roomsData);
-renderCards(roomsData);
+// renderCards(roomsData);
+
+const adForm = document.querySelector(`.ad-form`);
+const formFieldsets = adForm.querySelectorAll(`fieldset`);
+const mapFiltersList = document.querySelectorAll(`.map__filter, .map__features`);
+const mainPin = document.querySelector(`.map__pin--main`);
+const addressField = document.querySelector(`#address`);
+
+const formElementsSwitcher = (nodeList, flag) => {
+  for (let element of nodeList) {
+    element.disabled = flag;
+  }
+};
+
+const onPageActiveMode = (evt) => {
+  if (evt.button === 0 || evt.key === `Enter`) {
+    activateApp();
+    renderPins(roomsData);
+    fillAddressActivePin();
+  }
+};
+
+const activateApp = () => {
+  map.classList.remove(`map--faded`);
+  adForm.classList.remove(`ad-form--disabled`);
+
+  formElementsSwitcher(formFieldsets, false);
+  formElementsSwitcher(mapFiltersList, false);
+  fillAddressActivePin();
+  mainPin.removeEventListener(`mousedown`, onPageActiveMode);
+  mainPin.removeEventListener(`keydown`, onPageActiveMode);
+};
+
+mainPin.addEventListener(`mousedown`, onPageActiveMode);
+mainPin.addEventListener(`keydown`, onPageActiveMode);
+
+formElementsSwitcher(formFieldsets, true);
+formElementsSwitcher(mapFiltersList, true);
+
+const initialPinAddressX = parseInt(mainPin.style.left, 10) + MAIN_PIN_INACTIVE_WIDTH / 2;
+const initialPinAddressY = parseInt(mainPin.style.top, 10) + MAIN_PIN_INACTIVE_HEIGHT / 2;
+
+addressField.value = `${initialPinAddressX}, ${initialPinAddressY}`;
+
+const fillAddressActivePin = () => {
+  const initialActPinAddressX = parseInt(mainPin.style.left, 10) + MAIN_PIN_ACTIVE_WIDTH / 2;
+  const initialActPinAddressY = parseInt(mainPin.style.top, 10) + MAIN_PIN_ACTIVE_HEIGHT;
+
+  addressField.value = `${initialActPinAddressX}, ${initialActPinAddressY}`;
+};
+
