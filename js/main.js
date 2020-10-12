@@ -18,8 +18,6 @@ const MAIN_PIN_INACTIVE_HEIGHT = 65;
 const MAIN_PIN_ACTIVE_WIDTH = 65;
 const MAIN_PIN_ACTIVE_HEIGHT = 87;
 
-
-
 const TITLES = [
   `Большая уютная квартира`,
   `Маленькая неуютная квартира`,
@@ -307,9 +305,9 @@ const initialPinAddressY = Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN
 addressField.value = `${initialPinAddressX}, ${initialPinAddressY}`;
 
 const fillAddressActivePin = () => {
-  const initialActPinAddressX = Math.round(parseInt(mainPin.style.left, 10) + MAIN_PIN_ACTIVE_WIDTH / 2);
-  const initialActPinAddressY = Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_ACTIVE_HEIGHT);
+  const activePinAddressX = Math.round(parseInt(mainPin.style.left, 10) + MAIN_PIN_ACTIVE_WIDTH / 2);
+  const activePinAddressY = Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_ACTIVE_HEIGHT);
 
-  addressField.value = `${initialActPinAddressX}, ${initialActPinAddressY}`;
+  addressField.value = `${activePinAddressX}, ${activePinAddressY}`;
 };
 
