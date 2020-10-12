@@ -13,6 +13,14 @@ const PHOTOS_AMOUNT_MAX = 3;
 const PIN_WIDTH = 50;
 const PIN_HEIGHT = 70;
 
+const MAIN_PIN_WIDTH = 65;
+const MAIN_PIN_HEIGHT = 65;
+const MAIN_PIN_TALE = 22;
+
+const MIN_LOCATION_X = 0;
+const MIN_LOCATION_Y = 130;
+const MAX_LOCATION_Y = 630;
+
 const TITLES = [
   `Большая уютная квартира`,
   `Маленькая неуютная квартира`,
@@ -60,8 +68,14 @@ const CHECKOUT = [
 ];
 
 const map = document.querySelector(`.map`);
+const maxLocationX = map.offsetWidth;
 const pinBoard = document.querySelector(`.map__pins`);
 const mapFilters = map.querySelector(`.map__filters-container`);
+const adForm = document.querySelector(`.ad-form`);
+const formFieldsets = adForm.querySelectorAll(`fieldset`);
+const mapFiltersList = document.querySelectorAll(`.map__filter, .map__features`);
+const mainPin = document.querySelector(`.map__pin--main`);
+const addressField = document.querySelector(`#address`);
 
 const pinTemplate = document.getElementById(`pin`)
   .content
@@ -69,11 +83,6 @@ const pinTemplate = document.getElementById(`pin`)
 const cardTemplate = document.getElementById(`card`)
   .content
   .querySelector(`.map__card`);
-
-const MIN_LOCATION_X = 0;
-const maxLocationX = map.offsetWidth;
-const MIN_LOCATION_Y = 130;
-const MAX_LOCATION_Y = 630;
 
 const getRandomInteger = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -249,12 +258,55 @@ const makeCard = (offerData) => {
   return card;
 };
 
-const renderCards = (offers) => {
+const renderCard = (offers) => {
   map.insertBefore(makeCard(offers[0]), mapFilters);
 };
 
-map.classList.remove(`map--faded`);
+const formElementsSwitcher = (nodeList, flag) => {
+  for (let element of nodeList) {
+    element.disabled = flag;
+  }
+};
+
+const calcPinAdress = (isActivePage) => {
+  const pinAddressX = Math.round(parseInt(mainPin.style.left, 10) + MAIN_PIN_WIDTH / 2);
+  const pinAddressY = (isActivePage)
+    ? Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT + MAIN_PIN_TALE)
+    : Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT / 2);
+
+  return `${pinAddressX}, ${pinAddressY}`;
+};
+
+const onPageActiveMode = (evt) => {
+  if (evt.button === 0 || evt.key === `Enter`) {
+    activateApp();
+    renderPins(roomsData);
+  }
+};
+
+const activateApp = () => {
+  map.classList.remove(`map--faded`);
+  adForm.classList.remove(`ad-form--disabled`);
+
+  formElementsSwitcher(formFieldsets, false);
+  formElementsSwitcher(mapFiltersList, false);
+  addressField.value = calcPinAdress(true);
+  mainPin.removeEventListener(`mousedown`, onPageActiveMode);
+  mainPin.removeEventListener(`keydown`, onPageActiveMode);
+};
+
+const deactivateApp = () => {
+  map.classList.add(`map--faded`);
+  adForm.classList.add(`ad-form--disabled`);
+
+  formElementsSwitcher(formFieldsets, true);
+  formElementsSwitcher(mapFiltersList, true);
+  addressField.value = calcPinAdress(false);
+  mainPin.addEventListener(`mousedown`, onPageActiveMode);
+  mainPin.addEventListener(`keydown`, onPageActiveMode);
+};
 
 const roomsData = getOffersData(OFFER_AMOUNT);
-renderPins(roomsData);
-renderCards(roomsData);
+deactivateApp();
+
+
