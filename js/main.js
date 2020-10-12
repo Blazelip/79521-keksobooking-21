@@ -13,10 +13,13 @@ const PHOTOS_AMOUNT_MAX = 3;
 const PIN_WIDTH = 50;
 const PIN_HEIGHT = 70;
 
-const MAIN_PIN_INACTIVE_WIDTH = 65;
-const MAIN_PIN_INACTIVE_HEIGHT = 65;
-const MAIN_PIN_ACTIVE_WIDTH = 65;
-const MAIN_PIN_ACTIVE_HEIGHT = 87;
+const MAIN_PIN_WIDTH = 65;
+const MAIN_PIN_HEIGHT = 65;
+const MAIN_PIN_TALE = 22;
+
+const MIN_LOCATION_X = 0;
+const MIN_LOCATION_Y = 130;
+const MAX_LOCATION_Y = 630;
 
 const TITLES = [
   `Большая уютная квартира`,
@@ -65,8 +68,14 @@ const CHECKOUT = [
 ];
 
 const map = document.querySelector(`.map`);
+const maxLocationX = map.offsetWidth;
 const pinBoard = document.querySelector(`.map__pins`);
 const mapFilters = map.querySelector(`.map__filters-container`);
+const adForm = document.querySelector(`.ad-form`);
+const formFieldsets = adForm.querySelectorAll(`fieldset`);
+const mapFiltersList = document.querySelectorAll(`.map__filter, .map__features`);
+const mainPin = document.querySelector(`.map__pin--main`);
+const addressField = document.querySelector(`#address`);
 
 const pinTemplate = document.getElementById(`pin`)
   .content
@@ -74,11 +83,6 @@ const pinTemplate = document.getElementById(`pin`)
 const cardTemplate = document.getElementById(`card`)
   .content
   .querySelector(`.map__card`);
-
-const MIN_LOCATION_X = 0;
-const maxLocationX = map.offsetWidth;
-const MIN_LOCATION_Y = 130;
-const MAX_LOCATION_Y = 630;
 
 const getRandomInteger = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -153,8 +157,8 @@ const makePin = (offerData) => {
   const node = pinTemplate.cloneNode(true);
   const pinImg = node.querySelector(`img`);
 
-  node.style.left = `${offerData.location.x + PIN_WIDTH / 2}px`;
-  node.style.top = `${offerData.location.y + PIN_HEIGHT}px`;
+  node.style.left = `${offerData.location.x - PIN_WIDTH / 2}px`;
+  node.style.top = `${offerData.location.y - PIN_HEIGHT}px`;
   pinImg.src = offerData.author.avatar;
   pinImg.alt = offerData.offer.title;
 
@@ -254,19 +258,9 @@ const makeCard = (offerData) => {
   return card;
 };
 
-const renderCards = (offers) => {
+const renderCard = (offers) => {
   map.insertBefore(makeCard(offers[0]), mapFilters);
 };
-
-
-const roomsData = getOffersData(OFFER_AMOUNT);
-// renderCards(roomsData);
-
-const adForm = document.querySelector(`.ad-form`);
-const formFieldsets = adForm.querySelectorAll(`fieldset`);
-const mapFiltersList = document.querySelectorAll(`.map__filter, .map__features`);
-const mainPin = document.querySelector(`.map__pin--main`);
-const addressField = document.querySelector(`#address`);
 
 const formElementsSwitcher = (nodeList, flag) => {
   for (let element of nodeList) {
@@ -274,11 +268,19 @@ const formElementsSwitcher = (nodeList, flag) => {
   }
 };
 
+const calcPinAdress = (isActivePage) => {
+  const pinAddressX = Math.round(parseInt(mainPin.style.left, 10) + MAIN_PIN_WIDTH / 2);
+  const pinAddressY = (isActivePage)
+    ? Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT + MAIN_PIN_TALE)
+    : Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT / 2);
+
+  return `${pinAddressX}, ${pinAddressY}`;
+};
+
 const onPageActiveMode = (evt) => {
   if (evt.button === 0 || evt.key === `Enter`) {
     activateApp();
     renderPins(roomsData);
-    fillAddressActivePin();
   }
 };
 
@@ -288,26 +290,23 @@ const activateApp = () => {
 
   formElementsSwitcher(formFieldsets, false);
   formElementsSwitcher(mapFiltersList, false);
-  fillAddressActivePin();
+  addressField.value = calcPinAdress(true);
   mainPin.removeEventListener(`mousedown`, onPageActiveMode);
   mainPin.removeEventListener(`keydown`, onPageActiveMode);
 };
 
-mainPin.addEventListener(`mousedown`, onPageActiveMode);
-mainPin.addEventListener(`keydown`, onPageActiveMode);
+const deactivateApp = () => {
+  map.classList.add(`map--faded`);
+  adForm.classList.add(`ad-form--disabled`);
 
-formElementsSwitcher(formFieldsets, true);
-formElementsSwitcher(mapFiltersList, true);
-
-const initialPinAddressX = Math.round(parseInt(mainPin.style.left, 10) + MAIN_PIN_INACTIVE_WIDTH / 2);
-const initialPinAddressY = Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_INACTIVE_HEIGHT / 2);
-
-addressField.value = `${initialPinAddressX}, ${initialPinAddressY}`;
-
-const fillAddressActivePin = () => {
-  const activePinAddressX = Math.round(parseInt(mainPin.style.left, 10) + MAIN_PIN_ACTIVE_WIDTH / 2);
-  const activePinAddressY = Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_ACTIVE_HEIGHT);
-
-  addressField.value = `${activePinAddressX}, ${activePinAddressY}`;
+  formElementsSwitcher(formFieldsets, true);
+  formElementsSwitcher(mapFiltersList, true);
+  addressField.value = calcPinAdress(false);
+  mainPin.addEventListener(`mousedown`, onPageActiveMode);
+  mainPin.addEventListener(`keydown`, onPageActiveMode);
 };
+
+const roomsData = getOffersData(OFFER_AMOUNT);
+deactivateApp();
+
 
