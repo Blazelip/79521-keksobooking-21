@@ -301,14 +301,14 @@ mainPin.addEventListener(`keydown`, onPageActiveMode);
 formElementsSwitcher(formFieldsets, true);
 formElementsSwitcher(mapFiltersList, true);
 
-const initialPinAddressX = parseInt(mainPin.style.left, 10) + MAIN_PIN_INACTIVE_WIDTH / 2;
-const initialPinAddressY = parseInt(mainPin.style.top, 10) + MAIN_PIN_INACTIVE_HEIGHT / 2;
+const initialPinAddressX = Math.round(parseInt(mainPin.style.left, 10) + MAIN_PIN_INACTIVE_WIDTH / 2);
+const initialPinAddressY = Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_INACTIVE_HEIGHT / 2);
 
 addressField.value = `${initialPinAddressX}, ${initialPinAddressY}`;
 
 const fillAddressActivePin = () => {
-  const initialActPinAddressX = parseInt(mainPin.style.left, 10) + MAIN_PIN_ACTIVE_WIDTH / 2;
-  const initialActPinAddressY = parseInt(mainPin.style.top, 10) + MAIN_PIN_ACTIVE_HEIGHT;
+  const initialActPinAddressX = Math.round(parseInt(mainPin.style.left, 10) + MAIN_PIN_ACTIVE_WIDTH / 2);
+  const initialActPinAddressY = Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_ACTIVE_HEIGHT);
 
   addressField.value = `${initialActPinAddressX}, ${initialActPinAddressY}`;
 };
