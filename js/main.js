@@ -153,8 +153,9 @@ const getOffersData = (offerAmount) => {
   return offersData;
 };
 
-const addIdToOffersData = () => {
-  const modifiedArray = getOffersData(OFFER_AMOUNT).map((item, index) => {
+const addIdToSourceData = () => {
+  const sourceData = getOffersData(OFFER_AMOUNT);
+  const modifiedArray = sourceData.map((item, index) => {
     item.offer.id = index;
 
     return item;
@@ -230,7 +231,6 @@ const checkNullInCard = (card) => {
 };
 
 const makeCard = (offerData) => {
-  // console.log(offerData);
   const {offer, author} = offerData;
   const {
     title,
@@ -271,8 +271,30 @@ const makeCard = (offerData) => {
   return card;
 };
 
-const renderCard = (offer) => {
-  map.insertBefore(makeCard(offer), mapFilters);
+const deleteCurrentCard = () => {
+  const currentCard = map.querySelector(`.map__card`);
+
+  if (currentCard !== null) {
+    currentCard.querySelector(`.popup__close`).removeEventListener(`mousedown`, closePopup);
+    document.removeEventListener(`keydown`, closePopup);
+    currentCard.remove();
+  }
+};
+
+const closePopup = (evt) => {
+  if (evt.key === `Escape` || evt.button === 0) {
+    deleteCurrentCard();
+  }
+};
+
+const showCard = (offer) => {
+  deleteCurrentCard();
+  const card = makeCard(offer);
+
+  map.insertBefore(card, mapFilters);
+
+  document.addEventListener(`keydown`, closePopup);
+  card.querySelector(`.popup__close`).addEventListener(`mousedown`, closePopup);
 };
 
 const formElementsSwitcher = (nodeList, flag) => {
@@ -297,6 +319,36 @@ const onPageActiveMode = (evt) => {
   }
 };
 
+const onPinClick = (evt) => {
+
+  if (evt.target.tagName === `IMG` && evt.target.closest(`.map__pin`)) {
+    const button = evt.target.closest(`.map__pin`);
+
+    if (!button.classList.contains(`map__pin--main`)) {
+      const number = parseInt(button.dataset.id, 10);
+
+      const offer = roomsData.find((item) => {
+        return item.offer.id === number;
+      });
+
+      if (offer) {
+        showCard(offer);
+      }
+    }
+
+  } else if (evt.target.tagName === `BUTTON` && !evt.target.classList.contains(`map__pin--main`)) {
+    const number = parseInt(evt.target.dataset.id, 10);
+
+    const offer = roomsData.find((item) => {
+      return item.offer.id === number;
+    });
+
+    if (offer) {
+      showCard(offer);
+    }
+  }
+};
+
 const activateApp = () => {
   map.classList.remove(`map--faded`);
   adForm.classList.remove(`ad-form--disabled`);
@@ -307,23 +359,7 @@ const activateApp = () => {
   mainPin.removeEventListener(`mousedown`, onPageActiveMode);
   mainPin.removeEventListener(`keydown`, onPageActiveMode);
 
-  pinBoard.addEventListener(`click`, (evt) => {
-    const number = evt.target.dataset.id;
-
-    console.log(number);
-
-    const itemer = roomsData.find((item) => {
-      console.log(item.offer.id);
-      if (item.offer.id === number) {
-        return item;
-      }
-    });
-
-    console.log(itemer);
-
-    renderCard(itemer);
-
-  });
+  pinBoard.addEventListener(`click`, onPinClick);
 };
 
 const deactivateApp = () => {
@@ -337,12 +373,5 @@ const deactivateApp = () => {
   mainPin.addEventListener(`keydown`, onPageActiveMode);
 };
 
-const roomsData = addIdToOffersData();
+const roomsData = addIdToSourceData();
 deactivateApp();
-
-
-
-
-
-
-
