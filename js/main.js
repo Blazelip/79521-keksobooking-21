@@ -153,21 +153,18 @@ const getOffersData = (offerAmount) => {
   return offersData;
 };
 
-const addIdToSourceData = () => {
-  const sourceData = getOffersData(OFFER_AMOUNT);
-  const modifiedArray = sourceData.map((item, index) => {
+const addIdToSourceData = (array) => {
+
+  return array.map((item, index) => {
     item.offer.id = index;
 
     return item;
   });
-
-  return modifiedArray;
 };
 
 const makePin = (offerData) => {
   const node = pinTemplate.cloneNode(true);
   const pinImg = node.querySelector(`img`);
-
 
   node.dataset.id = `${offerData.offer.id}`;
   node.style.left = `${offerData.location.x - PIN_WIDTH / 2}px`;
@@ -271,11 +268,10 @@ const makeCard = (offerData) => {
   return card;
 };
 
-const deleteCurrentCard = () => {
+const closeCurrentCard = () => {
   const currentCard = map.querySelector(`.map__card`);
 
-  if (currentCard !== null) {
-    currentCard.querySelector(`.popup__close`).removeEventListener(`mousedown`, closePopup);
+  if (currentCard) {
     document.removeEventListener(`keydown`, closePopup);
     currentCard.remove();
   }
@@ -283,18 +279,19 @@ const deleteCurrentCard = () => {
 
 const closePopup = (evt) => {
   if (evt.key === `Escape` || evt.button === 0) {
-    deleteCurrentCard();
+    closeCurrentCard();
   }
 };
 
 const showCard = (offer) => {
-  deleteCurrentCard();
+  closeCurrentCard();
   const card = makeCard(offer);
+  const cardClose = card.querySelector(`.popup__close`);
 
   map.insertBefore(card, mapFilters);
 
   document.addEventListener(`keydown`, closePopup);
-  card.querySelector(`.popup__close`).addEventListener(`mousedown`, closePopup);
+  cardClose.addEventListener(`click`, closePopup);
 };
 
 const formElementsSwitcher = (nodeList, flag) => {
@@ -312,7 +309,7 @@ const calcPinAddress = (isActivePage) => {
   return `${pinAddressX}, ${pinAddressY}`;
 };
 
-const onPageActiveMode = (evt) => {
+const onMainPinHandler = (evt) => {
   if (evt.button === 0 || evt.key === `Enter`) {
     activateApp();
     renderPins(roomsData);
@@ -320,12 +317,13 @@ const onPageActiveMode = (evt) => {
 };
 
 const onPinClick = (evt) => {
+  const target = evt.target;
 
-  if (evt.target.tagName === `IMG` && evt.target.closest(`.map__pin`)) {
-    const button = evt.target.closest(`.map__pin`);
+  if (target.tagName === `IMG` || target.classList.contains(`map__pin`)) {
 
-    if (!button.classList.contains(`map__pin--main`)) {
-      const number = parseInt(button.dataset.id, 10);
+    if (!target.classList.contains(`map__pin--main`)) {
+      const id = parseInt(target.dataset.id, 10);
+      const number = id ? id : parseInt(evt.target.closest(`.map__pin`).dataset.id, 10);
 
       const offer = roomsData.find((item) => {
         return item.offer.id === number;
@@ -335,18 +333,34 @@ const onPinClick = (evt) => {
         showCard(offer);
       }
     }
-
-  } else if (evt.target.tagName === `BUTTON` && !evt.target.classList.contains(`map__pin--main`)) {
-    const number = parseInt(evt.target.dataset.id, 10);
-
-    const offer = roomsData.find((item) => {
-      return item.offer.id === number;
-    });
-
-    if (offer) {
-      showCard(offer);
-    }
   }
+
+  // if (evt.target.tagName === `IMG` && evt.target.closest(`.map__pin`)) {
+  //   const button = evt.target.closest(`.map__pin`);
+
+  //   if (!button.classList.contains(`map__pin--main`)) {
+  //     const number = parseInt(button.dataset.id, 10);
+
+  //     const offer = roomsData.find((item) => {
+  //       return item.offer.id === number;
+  //     });
+
+  //     if (offer) {
+  //       showCard(offer);
+  //     }
+  //   }
+
+  // } else if (evt.target.tagName === `BUTTON` && !evt.target.classList.contains(`map__pin--main`)) {
+  //   const number = parseInt(evt.target.dataset.id, 10);
+
+  //   const offer = roomsData.find((item) => {
+  //     return item.offer.id === number;
+  //   });
+
+  //   if (offer) {
+  //     showCard(offer);
+  //   }
+  // }
 };
 
 const activateApp = () => {
@@ -356,9 +370,8 @@ const activateApp = () => {
   formElementsSwitcher(formFieldsets, false);
   formElementsSwitcher(mapFiltersList, false);
   addressField.value = calcPinAddress(true);
-  mainPin.removeEventListener(`mousedown`, onPageActiveMode);
-  mainPin.removeEventListener(`keydown`, onPageActiveMode);
-
+  mainPin.removeEventListener(`mousedown`, onMainPinHandler);
+  mainPin.removeEventListener(`keydown`, onMainPinHandler);
   pinBoard.addEventListener(`click`, onPinClick);
 };
 
@@ -369,9 +382,11 @@ const deactivateApp = () => {
   formElementsSwitcher(formFieldsets, true);
   formElementsSwitcher(mapFiltersList, true);
   addressField.value = calcPinAddress(false);
-  mainPin.addEventListener(`mousedown`, onPageActiveMode);
-  mainPin.addEventListener(`keydown`, onPageActiveMode);
+  mainPin.addEventListener(`mousedown`, onMainPinHandler);
+  mainPin.addEventListener(`keydown`, onMainPinHandler);
+  pinBoard.removeEventListener(`click`, onPinClick);
 };
 
-const roomsData = addIdToSourceData();
+const sourceData = getOffersData(OFFER_AMOUNT);
+const roomsData = addIdToSourceData(sourceData);
 deactivateApp();
