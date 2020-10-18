@@ -8,6 +8,8 @@
     bungalow: `Бунгало`
   };
 
+  const map = document.querySelector(`.map`);
+  const mapFilters = map.querySelector(`.map__filters-container`);
   const cardTemplate = document.getElementById(`card`)
   .content
   .querySelector(`.map__card`);
@@ -94,8 +96,35 @@
     return card;
   };
 
+  const showCard = (offer) => {
+    closeCurrentCard();
+    const card = makeCard(offer);
+    const cardClose = card.querySelector(`.popup__close`);
+
+    map.insertBefore(card, mapFilters);
+
+    document.addEventListener(`keydown`, closePopup);
+    cardClose.addEventListener(`click`, closePopup);
+  };
+
+  const closePopup = (evt) => {
+    if (evt.key === `Escape` || evt.button === 0) {
+      closeCurrentCard();
+    }
+  };
+
+  const closeCurrentCard = () => {
+    const currentCard = map.querySelector(`.map__card`);
+
+    if (currentCard) {
+      document.removeEventListener(`keydown`, closePopup);
+      currentCard.remove();
+    }
+  };
+
   window.card = {
-    makeCard
+    makeCard,
+    showCard
   };
 
 })();

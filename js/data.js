@@ -102,7 +102,6 @@
   };
 
   const addIdToSourceData = (array) => {
-
     return array.map((item, index) => {
       item.offer.id = index;
 
@@ -114,7 +113,6 @@
   const roomsData = addIdToSourceData(sourceData);
 
   window.data = {
-    sourceData,
     roomsData
   };
 })();
