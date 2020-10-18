@@ -17,7 +17,6 @@
 
     window.form.enableForm();
     mainPin.removeEventListener(`mousedown`, onMainPinHandler);
-    mainPin.removeEventListener(`mousedown`, window.movePin.moveMainPin);
     mainPin.removeEventListener(`keydown`, onMainPinHandler);
     pinBoard.addEventListener(`click`, window.pin.onPinClick);
   };
@@ -26,8 +25,8 @@
     map.classList.add(`map--faded`);
 
     window.form.disableForm();
-    mainPin.addEventListener(`mousedown`, onMainPinHandler);
     mainPin.addEventListener(`mousedown`, window.movePin.moveMainPin);
+    mainPin.addEventListener(`mousedown`, onMainPinHandler);
     mainPin.addEventListener(`keydown`, onMainPinHandler);
     pinBoard.removeEventListener(`click`, window.pin.onPinClick);
   };

@@ -34,6 +34,9 @@
         y: mainPin.offsetTop - shift.y
       };
 
+      // mainPin.style.left = `${finalCoords.x}px`;
+      // mainPin.style.top = `${finalCoords.y}px`;
+
       if (finalCoords.x >= MAX_LOCATION_X) {
         mainPin.style.left = `${MAX_LOCATION_X}px`;
       } else if (finalCoords.x <= MIN_LOCATION_X) {
