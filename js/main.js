@@ -25,7 +25,7 @@
     map.classList.add(`map--faded`);
 
     window.form.disableForm();
-    mainPin.addEventListener(`mousedown`, window.movePin.moveMainPin);
+    mainPin.addEventListener(`mousedown`, window.pin.moveMainPin);
     mainPin.addEventListener(`mousedown`, onMainPinHandler);
     mainPin.addEventListener(`keydown`, onMainPinHandler);
     pinBoard.removeEventListener(`click`, window.pin.onPinClick);

@@ -18,6 +18,8 @@
   };
 
   const calcPinAddress = (isActivePage) => {
+    addressField.readOnly = true;
+
     const pinAddressX = Math.round(parseInt(mainPin.style.left, 10) + MAIN_PIN_WIDTH / 2);
     const pinAddressY = (isActivePage)
       ? Math.round(parseInt(mainPin.style.top, 10) + MAIN_PIN_HEIGHT + MAIN_PIN_TALE)
