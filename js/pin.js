@@ -102,13 +102,17 @@
 
       if (finalCoords.x >= pinLimits.x.max) {
         finalCoords.x = `${pinLimits.x.max}px`;
-      } else if (finalCoords.x <= pinLimits.x.min) {
+      }
+
+      if (finalCoords.x <= pinLimits.x.min) {
         finalCoords.x = `${pinLimits.x.min}px`;
       }
 
       if (finalCoords.y >= pinLimits.y.max) {
         finalCoords.y = `${pinLimits.y.max}px`;
-      } else if (finalCoords.y <= pinLimits.y.min) {
+      }
+
+      if (finalCoords.y <= pinLimits.y.min) {
         finalCoords.y = `${pinLimits.y.min}px`;
       }
 
