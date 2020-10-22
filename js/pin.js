@@ -108,11 +108,11 @@
         finalCoords.x = `${pinLimits.x.min}px`;
       }
 
-      if (finalCoords.y >= pinLimits.y.max) {
+      if (finalCoords.y > pinLimits.y.max) {
         finalCoords.y = `${pinLimits.y.max}px`;
       }
 
-      if (finalCoords.y <= pinLimits.y.min) {
+      if (finalCoords.y < pinLimits.y.min) {
         finalCoords.y = `${pinLimits.y.min}px`;
       }
 

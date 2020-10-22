@@ -9,7 +9,7 @@
   const adForm = document.querySelector(`.ad-form`);
   const formFieldsets = adForm.querySelectorAll(`fieldset`);
   const mapFiltersList = document.querySelectorAll(`.map__filter, .map__features`);
-  const addressField = document.querySelector(`#address`);
+  const addressField = adForm.querySelector(`#address`);
 
   const formElementsSwitcher = (nodeList, flag) => {
     for (let element of nodeList) {
@@ -18,7 +18,6 @@
   };
 
   const calcPinAddress = (isActivePage) => {
-    addressField.readOnly = true;
 
     const pinAddressX = Math.round(parseInt(mainPin.style.left, 10) + MAIN_PIN_WIDTH / 2);
     const pinAddressY = (isActivePage)
@@ -33,6 +32,7 @@
     formElementsSwitcher(formFieldsets, true);
     formElementsSwitcher(mapFiltersList, true);
     addressField.value = calcPinAddress(false);
+    window.validation.setMinPrice();
   };
 
   const enableForm = () => {
