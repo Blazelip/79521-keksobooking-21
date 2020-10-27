@@ -5,10 +5,19 @@
   const mainPin = document.querySelector(`.map__pin--main`);
   const pinBoard = document.querySelector(`.map__pins`);
 
-  const onMainPinHandler = (evt) => {
+  const onSuccessLoad = (data) => {
+    console.log(data);
+  };
+
+  const onError = () => {
+
+  };
+
+  const onMainPinClick = (evt) => {
     if (evt.button === 0 || evt.key === `Enter`) {
       activateApp();
-      window.pin.renderPins(window.data.roomsData);
+      window.backend.getData(onSuccessLoad, onError);
+      // window.pin.renderPins(window.data.roomsData);
     }
   };
 
@@ -16,8 +25,8 @@
     map.classList.remove(`map--faded`);
 
     window.form.enableForm();
-    mainPin.removeEventListener(`mousedown`, onMainPinHandler);
-    mainPin.removeEventListener(`keydown`, onMainPinHandler);
+    mainPin.removeEventListener(`mousedown`, onMainPinClick);
+    mainPin.removeEventListener(`keydown`, onMainPinClick);
     pinBoard.addEventListener(`click`, window.pin.onPinClick);
   };
 
@@ -26,8 +35,8 @@
 
     window.form.disableForm();
     mainPin.addEventListener(`mousedown`, window.pin.moveMainPin);
-    mainPin.addEventListener(`mousedown`, onMainPinHandler);
-    mainPin.addEventListener(`keydown`, onMainPinHandler);
+    mainPin.addEventListener(`mousedown`, onMainPinClick);
+    mainPin.addEventListener(`keydown`, onMainPinClick);
     pinBoard.removeEventListener(`click`, window.pin.onPinClick);
   };
 
