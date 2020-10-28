@@ -5,19 +5,30 @@
   const mainPin = document.querySelector(`.map__pin--main`);
   const pinBoard = document.querySelector(`.map__pins`);
 
-  const onSuccessLoad = (data) => {
-    console.log(data);
+  const errorMsgTemplate = document.getElementById(`error`)
+  .content
+  .querySelector(`.error`);
+
+  const onSuccessLoadData = (serverData) => {
+    // const dataWithId = window.data.addIdToSourceData(serverData);
+    window.dataWithId = window.data.addIdToSourceData(serverData);
+
+    window.pin.renderPins(window.dataWithId);
   };
 
-  const onError = () => {
+  const onFailedRequest = (errorMsg) => {
+    const node = errorMsgTemplate.cloneNode(true);
+    const text = node.querySelector(`.error__message`);
 
+    text.textContent = `${errorMsg}`;
+
+    pinBoard.appendChild(node);
   };
 
   const onMainPinClick = (evt) => {
     if (evt.button === 0 || evt.key === `Enter`) {
       activateApp();
-      window.backend.getData(onSuccessLoad, onError);
-      // window.pin.renderPins(window.data.roomsData);
+      window.backend.getData(onSuccessLoadData, onFailedRequest);
     }
   };
 

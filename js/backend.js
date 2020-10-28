@@ -1,17 +1,15 @@
 'use strict';
 
 (() => {
-  const URL = `https://21.javascript.pages.academy/keksobooking/data`;
+  const API_URL = `https://21.javascript.pages.academy/keksobooking/`;
 
   const TIMEOUT_IN_MS = 10000;
+
   const statusCode = {
     OK: 200
   };
 
-  const getData = (onLoad, onError) => {
-    const xhr = new XMLHttpRequest();
-    xhr.responseType = `json`;
-
+  const getServerResponse = (xhr, onLoad, onError) => {
     xhr.addEventListener(`load`, () => {
       if (xhr.status === statusCode.OK) {
         onLoad(xhr.response);
@@ -28,13 +26,32 @@
     });
 
     xhr.timeout = TIMEOUT_IN_MS;
+  };
 
-    xhr.open(`GET`, URL);
+  const getData = (onLoad, onError) => {
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = `json`;
+
+    getServerResponse(xhr, onLoad, onError);
+
+    xhr.open(`GET`, `${API_URL}data`);
     xhr.send();
   };
 
+  // const sendData = (data, onLoad, onError) => {
+  //   const xhr = new XMLHttpRequest();
+  //   xhr.responseType = `json`;
+
+  //   getServerResponse(xhr, onLoad, onError);
+
+  //   xhr.open(`POST`, `${API_URL}`);
+  //   xhr.send(data);
+  // };
+
+
   window.backend = {
-    getData
+    getData,
+    // sendData
   };
 
 })();
