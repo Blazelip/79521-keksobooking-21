@@ -26,11 +26,20 @@
     return shuffleArray(array).slice(getRandomInteger(0, array.length - 1));
   };
 
+  const addIdToSourceData = (array) => {
+    return array.map((item, index) => {
+      item.offer.id = index;
+
+      return item;
+    });
+  };
+
   window.util = {
     getRandomInteger,
     getRandomArrayElement,
     shuffleArray,
-    getRandomArray
+    getRandomArray,
+    addIdToSourceData
   };
 
 })();

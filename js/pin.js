@@ -63,7 +63,7 @@
         const id = parseInt(target.dataset.id, 10);
         const number = id ? id : parseInt(evt.target.closest(`.map__pin`).dataset.id, 10);
 
-        const offer = window.data.roomsData.find((item) => {
+        const offer = window.dataWithId.find((item) => {
           return item.offer.id === number;
         });
 
