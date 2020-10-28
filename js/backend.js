@@ -5,13 +5,13 @@
 
   const TIMEOUT_IN_MS = 10000;
 
-  const statusCode = {
+  const StatusCode = {
     OK: 200
   };
 
   const getServerResponse = (xhr, onLoad, onError) => {
     xhr.addEventListener(`load`, () => {
-      if (xhr.status === statusCode.OK) {
+      if (xhr.status === StatusCode.OK) {
         onLoad(xhr.response);
       } else {
         onError(`Статус ответа: ${xhr.status} - ${xhr.statusText}`);
@@ -38,20 +38,20 @@
     xhr.send();
   };
 
-  // const sendData = (data, onLoad, onError) => {
-  //   const xhr = new XMLHttpRequest();
-  //   xhr.responseType = `json`;
+  const sendData = (data, onLoad, onError) => {
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = `json`;
 
-  //   getServerResponse(xhr, onLoad, onError);
+    getServerResponse(xhr, onLoad, onError);
 
-  //   xhr.open(`POST`, `${API_URL}`);
-  //   xhr.send(data);
-  // };
+    xhr.open(`POST`, `${API_URL}`);
+    xhr.send(data);
+  };
 
 
   window.backend = {
     getData,
-    // sendData
+    sendData
   };
 
 })();

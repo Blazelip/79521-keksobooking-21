@@ -42,6 +42,11 @@
     addressField.value = calcPinAddress(true);
   };
 
+  adForm.addEventListener(`submit`, (evt) => {
+    evt.preventDefault();
+    window.backend.sendData(new FormData(adForm), onSuccessSendForm, window.setup.methods.onFailedRequest);
+  });
+
   window.form = {
     calcPinAddress,
     disableForm,

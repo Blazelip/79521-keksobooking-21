@@ -10,8 +10,7 @@
   .querySelector(`.error`);
 
   const onSuccessLoadData = (serverData) => {
-    // const dataWithId = window.data.addIdToSourceData(serverData);
-    window.dataWithId = window.data.addIdToSourceData(serverData);
+    window.dataWithId = window.util.addIdToSourceData(serverData);
 
     window.pin.renderPins(window.dataWithId);
   };
@@ -28,13 +27,14 @@
   const onMainPinClick = (evt) => {
     if (evt.button === 0 || evt.key === `Enter`) {
       activateApp();
-      window.backend.getData(onSuccessLoadData, onFailedRequest);
+
     }
   };
 
   const activateApp = () => {
     map.classList.remove(`map--faded`);
 
+    window.backend.getData(onSuccessLoadData, onFailedRequest);
     window.form.enableForm();
     mainPin.removeEventListener(`mousedown`, onMainPinClick);
     mainPin.removeEventListener(`keydown`, onMainPinClick);
