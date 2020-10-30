@@ -42,7 +42,6 @@
 
     return node;
   };
-
   const renderPins = (offers) => {
     const fragment = document.createDocumentFragment();
 
@@ -54,12 +53,20 @@
     pinBoard.appendChild(fragment);
   };
 
+  const deletePins = () => {
+    const pins = pinBoard.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+
+    pins.forEach((pin) => {
+      pin.remove();
+    });
+  };
+
   const onPinClick = (evt) => {
     const target = evt.target;
 
     if (target.tagName === `IMG` || target.classList.contains(`map__pin`)) {
 
-      if (!target.classList.contains(`map__pin--main`)) {
+      if (!target.classList.contains(`map__pin--main`) && !target.closest(`.map__pin--main`)) {
         const id = parseInt(target.dataset.id, 10);
         const number = id ? id : parseInt(evt.target.closest(`.map__pin`).dataset.id, 10);
 
@@ -137,7 +144,8 @@
     makePin,
     renderPins,
     onPinClick,
-    moveMainPin
+    moveMainPin,
+    deletePins
   };
 
 })();

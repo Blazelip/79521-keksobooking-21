@@ -5,29 +5,18 @@
   const mainPin = document.querySelector(`.map__pin--main`);
   const pinBoard = document.querySelector(`.map__pins`);
 
-  const errorMsgTemplate = document.getElementById(`error`)
-  .content
-  .querySelector(`.error`);
-
   const onSuccessLoadData = (serverData) => {
     window.dataWithId = window.util.addIdToSourceData(serverData);
-
     window.pin.renderPins(window.dataWithId);
   };
 
   const onFailedRequest = (errorMsg) => {
-    const node = errorMsgTemplate.cloneNode(true);
-    const text = node.querySelector(`.error__message`);
-
-    text.textContent = `${errorMsg}`;
-
-    pinBoard.appendChild(node);
+    window.statusMsg.showErrorMsg(errorMsg);
   };
 
   const onMainPinClick = (evt) => {
     if (evt.button === 0 || evt.key === `Enter`) {
       activateApp();
-
     }
   };
 
@@ -52,5 +41,9 @@
   };
 
   deactivateApp();
+
+  window.main = {
+    deactivateApp
+  };
 
 })();
