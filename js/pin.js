@@ -12,6 +12,8 @@
   const MIN_LOCATION_Y = 130;
   const MAX_LOCATION_Y = 630;
 
+  const PIN_ON_MAP = 5;
+
   const pinLimits = {
     x: {
       min: MIN_LOCATION_X - MAIN_PIN_WIDTH / 2,
@@ -43,14 +45,23 @@
     return node;
   };
   const renderPins = (offers) => {
+    const limitNumber = offers.length > PIN_ON_MAP
+      ? PIN_ON_MAP
+      : offers.length;
+
     const fragment = document.createDocumentFragment();
 
-    offers.forEach((offer) => {
-      const currentPin = makePin(offer);
+    for (let i = 0; i < limitNumber; i++) {
+      const currentPin = makePin(offers[i]);
       fragment.appendChild(currentPin);
-    });
+    }
 
     pinBoard.appendChild(fragment);
+
+    // offers.forEach((offer) => {
+    //   const currentPin = makePin(offer);
+    //   fragment.appendChild(currentPin);
+    // });
   };
 
   const deletePins = () => {
