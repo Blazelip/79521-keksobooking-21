@@ -124,7 +124,8 @@
 
   window.card = {
     makeCard,
-    showCard
+    showCard,
+    closeCurrentCard
   };
 
 })();

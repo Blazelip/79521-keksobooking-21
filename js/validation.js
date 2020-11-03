@@ -85,7 +85,6 @@
 
   titleField.addEventListener(`change`, onTitleInput);
   priceField.addEventListener(`change`, onPriceInput);
-  adForm.addEventListener(`change`, roomsFieldChecker);
 
   typeField.addEventListener(`change`, () => {
     setMinPrice();
@@ -94,7 +93,8 @@
   timeFieldset.addEventListener(`change`, onTimeFieldsHandler);
 
   window.validation = {
-    setMinPrice
+    setMinPrice,
+    roomsFieldChecker
   };
 
 })();

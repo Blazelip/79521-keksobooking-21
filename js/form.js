@@ -61,7 +61,11 @@
 
   adForm.addEventListener(`submit`, (evt) => {
     evt.preventDefault();
-    window.backend.sendData(new FormData(adForm), onSuccessSendForm, onFailedRequest);
+    window.validation.roomsFieldChecker();
+
+    if (adForm.checkValidity()) {
+      window.backend.sendData(new FormData(adForm), onSuccessSendForm, onFailedRequest);
+    }
   });
 
   window.form = {

@@ -44,14 +44,12 @@
 
     getServerResponse(xhr, onLoad, onError);
 
-    xhr.open(`POST`, `${API_URL}`);
+    xhr.open(`POST`, API_URL);
     xhr.send(data);
   };
-
 
   window.backend = {
     getData,
     sendData
   };
-
 })();

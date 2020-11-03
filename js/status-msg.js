@@ -15,31 +15,29 @@
   const showErrorMsg = (errorMsg) => {
     const node = errorMsgTemplate.cloneNode(true);
     const text = node.querySelector(`.error__message`);
-    // const button = node.querySelector(`.error__button`);
 
     text.textContent = `${errorMsg}`;
 
     pinBoard.appendChild(node);
 
-    const onTryAgainButtonClick = () => {
-      console.log(`YA tut`);
+    const onStatusClose = () => {
       node.remove();
-      document.removeEventListener(`keydown`, onTryAgainButtonPressEsc);
-      document.removeEventListener(`click`, onTryAgainButtonClick);
+      document.removeEventListener(`keydown`, onDocumentPressEsc);
+      document.removeEventListener(`click`, onDocumentClick);
     };
 
-    const onTryAgainButtonPressEsc = (evt) => {
+    const onDocumentClick = () => {
+      onStatusClose();
+    };
+
+    const onDocumentPressEsc = (evt) => {
       if (evt.key === `Escape`) {
-        node.remove();
+        onStatusClose();
       }
-
-      document.removeEventListener(`keydown`, onTryAgainButtonPressEsc);
-      document.removeEventListener(`click`, onTryAgainButtonClick);
     };
 
-    // button.addEventListener(`click`, onTryAgainButtonClick);
-    document.addEventListener(`keydown`, onTryAgainButtonPressEsc);
-    document.addEventListener(`click`, onTryAgainButtonClick);
+    document.addEventListener(`keydown`, onDocumentPressEsc);
+    document.addEventListener(`click`, onDocumentClick);
   };
 
   const showSuccessMsg = () => {
