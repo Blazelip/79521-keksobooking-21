@@ -7,7 +7,7 @@
 
   const onSuccessLoadData = (serverData) => {
     window.dataWithId = window.util.addIdToSourceData(serverData);
-    window.pin.renderPins(window.dataWithId);
+    window.pin.renderPins(window.filter.filterData(window.dataWithId));
   };
 
   const onFailedRequest = (errorMsg) => {

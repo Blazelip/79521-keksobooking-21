@@ -1,6 +1,8 @@
 'use strict';
 
 (() => {
+  const DEBOUNCE_INTERVAL = 500;
+
   const getRandomInteger = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   };
@@ -34,12 +36,26 @@
     });
   };
 
+  const debounce = (cb, interval = DEBOUNCE_INTERVAL) => {
+    let lastTimeout = null;
+
+    return (...parameters) => {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(() => {
+        cb(...parameters);
+      }, interval);
+    };
+  };
+
   window.util = {
     getRandomInteger,
     getRandomArrayElement,
     shuffleArray,
     getRandomArray,
-    addIdToSourceData
+    addIdToSourceData,
+    debounce
   };
 
 })();
