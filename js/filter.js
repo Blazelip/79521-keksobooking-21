@@ -26,7 +26,7 @@
   const filterHouseType = (item) => {
     const houseFilter = houseType.value;
 
-    if (item.offer.type === parseInt(houseFilter, 10) || houseFilter === FILTER_ALL) {
+    if (item.offer.type === houseFilter || houseFilter === FILTER_ALL) {
       return true;
     }
 
@@ -39,7 +39,6 @@
     switch (priceFilter) {
       case FILTER_ALL:
         return true;
-        break;
 
       case `middle`:
         if (item.offer.price >= housePriceMap.middle.min && item.offer.price <= housePriceMap.middle.max) {
@@ -99,15 +98,16 @@
   const filterData = (offers) => {
     const filteredData = [];
 
-    for (let i = 0; i < offers.length; i++) {
+    for (let i = 0; i < offers.length && filteredData.length < MAX_PIN_AMOUNT; i++) {
 
-      if (filterHouseType(offers[i]) && filterHousePrice(offers[i]) && filterHouseRooms(offers[i]) && filterHouseGuests(offers[i]) && filterHouseFeatures(offers[i])) {
-
-        if (filteredData.length < MAX_PIN_AMOUNT) {
-          filteredData.push(offers[i]);
-        }
-
+      if (filterHouseType(offers[i]) &&
+      filterHousePrice(offers[i]) &&
+      filterHouseRooms(offers[i]) &&
+      filterHouseGuests(offers[i]) &&
+      filterHouseFeatures(offers[i])) {
+        filteredData.push(offers[i]);
       }
+
     }
 
     return filteredData;
@@ -119,7 +119,7 @@
     window.pin.renderPins(filterData(window.dataWithId));
   };
 
-  filtersForm.addEventListener(`change`, window.debounce(onFiltersFormChange));
+  filtersForm.addEventListener(`change`, window.util.debounce(onFiltersFormChange));
 
   window.filter = {
     filterData
