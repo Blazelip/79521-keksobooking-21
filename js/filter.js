@@ -83,15 +83,10 @@
   };
 
   const filterHouseFeatures = (item) => {
-    const checkedFeatures = filtersForm.querySelectorAll(`.map__checkbox:checked`);
-    const features = [];
+    const checkedFeatures = Array.from(filtersForm.querySelectorAll(`.map__checkbox:checked`));
 
-    checkedFeatures.forEach((feature) => {
-      features.push(feature.value);
-    });
-
-    return features.every((feature) => {
-      return item.offer.features.includes(feature);
+    return checkedFeatures.every((feature) => {
+      return item.offer.features.includes(feature.value);
     });
   };
 
