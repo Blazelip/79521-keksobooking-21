@@ -50,11 +50,6 @@
       fragment.appendChild(currentPin);
     });
 
-    // for (let i = 0; i < limitNumber; i++) {
-    //   const currentPin = makePin(offers[i]);
-    //   fragment.appendChild(currentPin);
-    // }
-
     pinBoard.appendChild(fragment);
   };
 
