@@ -4,12 +4,56 @@ const MAIN_PIN_WIDTH = 65;
 const MAIN_PIN_HEIGHT = 65;
 const MAIN_PIN_TALE = 22;
 
+const FILE_TYPES = [`jpg`, `jpeg`, `png`];
+
 const mainPin = document.querySelector(`.map__pin--main`);
 const adForm = document.querySelector(`.ad-form`);
 const formReset = adForm.querySelector(`.ad-form__reset`);
 const formFieldsets = adForm.querySelectorAll(`fieldset`);
 const mapFiltersList = document.querySelectorAll(`.map__filter, .map__features`);
 const addressField = adForm.querySelector(`#address`);
+const userPic = adForm.querySelector(`.ad-form-header__input`);
+const userPicPreview = adForm.querySelector(`.ad-form-header__preview img`);
+const uploadPic = adForm.querySelector(`.ad-form__input`);
+const offerPicContainer = adForm.querySelector(`.ad-form__photo`);
+
+const onUserPicLoad = () => {
+  const file = userPic.files[0];
+  const fileType = file.type;
+
+  const matches = FILE_TYPES.some(function (item) {
+    return fileType.endsWith(item);
+  });
+
+  if (matches) {
+    const reader = new FileReader();
+
+    reader.addEventListener(`load`, () => {
+      userPicPreview.src = reader.result;
+    });
+
+    reader.readAsDataURL(file);
+  }
+};
+
+const onOfferPicLoad = () => {
+  const file = uploadPic.files[0];
+  const fileType = file.type;
+
+  const matches = FILE_TYPES.some(function (item) {
+    return fileType.endsWith(item);
+  });
+
+  if (matches) {
+    const reader = new FileReader();
+
+    reader.addEventListener(`load`, () => {
+      offerPicContainer.innerHTML = `<img class="ad-form__photo-preview" src="${reader.result}">`;
+    });
+
+    reader.readAsDataURL(file);
+  }
+};
 
 const formElementsSwitcher = (nodeList, flag) => {
   for (let element of nodeList) {
@@ -57,6 +101,9 @@ const enableForm = () => {
   addressField.value = calcPinAddress(true);
   formReset.addEventListener(`click`, onResetBtnClick);
 };
+
+userPic.addEventListener(`change`, onUserPicLoad);
+uploadPic.addEventListener(`change`, onOfferPicLoad);
 
 adForm.addEventListener(`submit`, (evt) => {
   evt.preventDefault();
