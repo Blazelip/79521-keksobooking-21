@@ -109,7 +109,6 @@ uploadPic.addEventListener(`change`, onFileInputLoadPic);
 adForm.addEventListener(`submit`, (evt) => {
   evt.preventDefault();
   window.validation.roomsFieldChecker();
-  console.log(`ya tut`);
   if (adForm.checkValidity()) {
     window.backend.sendData(new FormData(adForm), onSuccessSendForm, onFailedRequest);
   }

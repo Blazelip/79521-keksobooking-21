@@ -87,6 +87,8 @@ const onTimeFieldsHandler = (evt) => {
 
 titleField.addEventListener(`change`, onTitleInput);
 priceField.addEventListener(`change`, onPriceInput);
+roomField.addEventListener(`change`, roomsFieldChecker);
+guestField.addEventListener(`change`, roomsFieldChecker);
 
 typeField.addEventListener(`change`, () => {
   setMinPrice();
