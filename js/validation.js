@@ -58,6 +58,9 @@ const roomsFieldChecker = () => {
   const room = parseInt(roomField.value, 10);
   const person = parseInt(guestField.value, 10);
 
+  roomField.setCustomValidity(``);
+  guestField.setCustomValidity(``);
+
   if (room === ROOMS_MAX && person !== GUESTS_MIN) {
     guestField.setCustomValidity(`100 комнат, это шо, дворец по-твоему? Выбирай "Не для гостей"`);
   } else if (person === GUESTS_MIN && room !== ROOMS_MAX) {

@@ -19,7 +19,7 @@ module.exports = {
   },
   devtool: false,
   devServer: {
-    open: `Google Chrome`,
+    open: true,
     compress: true,
     port: 8080
   }
