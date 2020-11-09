@@ -1,6 +1,5 @@
 'use strict';
 
-
 const PIN_WIDTH = 50;
 const PIN_HEIGHT = 70;
 const MAIN_PIN_WIDTH = 65;
@@ -39,6 +38,10 @@ const resetMainPinCoord = () => {
 };
 
 const makePin = (offerData) => {
+  if (offerData.offer === ``) {
+    return null;
+  }
+
   const node = pinTemplate.cloneNode(true);
   const pinImg = node.querySelector(`img`);
 
@@ -50,12 +53,16 @@ const makePin = (offerData) => {
 
   return node;
 };
+
 const renderPins = (offers) => {
   const fragment = document.createDocumentFragment();
 
   offers.forEach((offer) => {
     const currentPin = makePin(offer);
-    fragment.appendChild(currentPin);
+    if (currentPin) {
+      fragment.appendChild(currentPin);
+    }
+
   });
 
   pinBoard.appendChild(fragment);
