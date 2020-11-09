@@ -24,7 +24,6 @@ const makeOfferFeatures = (features, card) => {
 
     featuresList.appendChild(listItem);
   });
-
 };
 
 const makeOfferPhotos = (photos, card) => {
