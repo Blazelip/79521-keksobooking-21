@@ -28,16 +28,16 @@ const pinLimits = {
 const mainPin = document.querySelector(`.map__pin--main`);
 const pinBoard = document.querySelector(`.map__pins`);
 const addressField = document.querySelector(`#address`);
-const pinTemplate = document.getElementById(`pin`)
+const pinTemplate = document.querySelector(`#pin`)
 .content
 .querySelector(`.map__pin`);
 
-const resetMainPinCoord = () => {
+const resetMain = () => {
   mainPin.style.left = `${MAIN_PIN_DEFAULT_X}px`;
   mainPin.style.top = `${MAIN_PIN_DEFAULT_Y}px`;
 };
 
-const makePin = (offerData) => {
+const make = (offerData) => {
   if (offerData.offer === ``) {
     return null;
   }
@@ -54,11 +54,11 @@ const makePin = (offerData) => {
   return node;
 };
 
-const renderPins = (offers) => {
+const render = (offers) => {
   const fragment = document.createDocumentFragment();
 
   offers.forEach((offer) => {
-    const currentPin = makePin(offer);
+    const currentPin = make(offer);
     if (currentPin) {
       fragment.appendChild(currentPin);
     }
@@ -68,7 +68,7 @@ const renderPins = (offers) => {
   pinBoard.appendChild(fragment);
 };
 
-const deletePins = () => {
+const deleteMarks = () => {
   const pins = pinBoard.querySelectorAll(`.map__pin:not(.map__pin--main)`);
 
   pins.forEach((pin) => {
@@ -90,13 +90,13 @@ const onPinClick = (evt) => {
       });
 
       if (offer) {
-        window.card.showCard(offer);
+        window.card.show(offer);
       }
     }
   }
 };
 
-const moveMainPin = (evt) => {
+const moveMain = (evt) => {
   evt.preventDefault();
 
   let startCoords = {
@@ -144,7 +144,7 @@ const moveMainPin = (evt) => {
     addressField.value = window.form.calcPinAddress(true);
   };
 
-  const onMouseUp = function (upEvt) {
+  const onMouseUp = (upEvt) => {
     upEvt.preventDefault();
 
     document.removeEventListener(`mousemove`, onMouseMove);
@@ -156,10 +156,10 @@ const moveMainPin = (evt) => {
 };
 
 window.pin = {
-  resetMainPinCoord,
-  makePin,
-  renderPins,
+  resetMain,
+  make,
+  render,
   onPinClick,
-  moveMainPin,
-  deletePins
+  moveMain,
+  deleteMarks
 };

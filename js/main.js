@@ -6,11 +6,11 @@ const pinBoard = document.querySelector(`.map__pins`);
 
 const onSuccessLoadData = (serverData) => {
   window.dataWithId = window.util.addIdToSourceData(serverData);
-  window.pin.renderPins(window.filter.filterData(window.dataWithId));
+  window.pin.render(window.filter.sortData(window.dataWithId));
 };
 
 const onFailedRequest = (errorMsg) => {
-  window.statusMsg.showErrorMsg(errorMsg);
+  window.statusMsg.showError(errorMsg);
 };
 
 const onMainPinClick = (evt) => {
@@ -23,7 +23,7 @@ const activateApp = () => {
   map.classList.remove(`map--faded`);
 
   window.backend.getData(onSuccessLoadData, onFailedRequest);
-  window.form.enableForm();
+  window.form.enable();
   mainPin.removeEventListener(`mousedown`, onMainPinClick);
   mainPin.removeEventListener(`keydown`, onMainPinClick);
   pinBoard.addEventListener(`click`, window.pin.onPinClick);
@@ -32,8 +32,8 @@ const activateApp = () => {
 const deactivateApp = () => {
   map.classList.add(`map--faded`);
 
-  window.form.disableForm();
-  mainPin.addEventListener(`mousedown`, window.pin.moveMainPin);
+  window.form.disable();
+  mainPin.addEventListener(`mousedown`, window.pin.moveMain);
   mainPin.addEventListener(`mousedown`, onMainPinClick);
   mainPin.addEventListener(`keydown`, onMainPinClick);
   pinBoard.removeEventListener(`click`, window.pin.onPinClick);

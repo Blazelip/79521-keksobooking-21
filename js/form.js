@@ -25,7 +25,7 @@ const onFileInputLoadPic = (evt) => {
   const file = input.files[0];
   const fileType = file.type;
 
-  const matches = FILE_TYPES.some(function (item) {
+  const matches = FILE_TYPES.some((item) => {
     return fileType.endsWith(item);
   });
 
@@ -60,33 +60,33 @@ const calcPinAddress = (isActivePage) => {
 };
 
 const onSuccessSendForm = () => {
-  window.card.closeCurrentCard();
-  window.pin.deletePins();
+  window.card.closeCurrent();
+  window.pin.deleteMarks();
   mapFilters.reset();
   adForm.reset();
   userPicPreview.src = DEFAULT_USERPIC_URL;
   offerPicContainer.innerHTML = ``;
-  window.pin.resetMainPinCoord();
+  window.pin.resetMain();
   window.main.deactivateApp();
-  window.statusMsg.showSuccessMsg();
+  window.statusMsg.showSuccess();
 };
 
 const onFailedRequest = (errorMsg) => {
-  window.statusMsg.showErrorMsg(errorMsg);
+  window.statusMsg.showError(errorMsg);
 };
 
 const onResetBtnClick = () => {
-  window.card.closeCurrentCard();
-  window.pin.deletePins();
+  window.card.closeCurrent();
+  window.pin.deleteMarks();
   mapFilters.reset();
   adForm.reset();
   userPicPreview.src = DEFAULT_USERPIC_URL;
   offerPicContainer.innerHTML = ``;
-  window.pin.resetMainPinCoord();
+  window.pin.resetMain();
   window.main.deactivateApp();
 };
 
-const disableForm = () => {
+const disable = () => {
   adForm.classList.add(`ad-form--disabled`);
   formElementsSwitcher(formFieldsets, true);
   formElementsSwitcher(mapFilterItems, true);
@@ -95,7 +95,7 @@ const disableForm = () => {
   formReset.removeEventListener(`click`, onResetBtnClick);
 };
 
-const enableForm = () => {
+const enable = () => {
   adForm.classList.remove(`ad-form--disabled`);
   formElementsSwitcher(formFieldsets, false);
   formElementsSwitcher(mapFilterItems, false);
@@ -116,6 +116,6 @@ adForm.addEventListener(`submit`, (evt) => {
 
 window.form = {
   calcPinAddress,
-  disableForm,
-  enableForm
+  disable,
+  enable
 };

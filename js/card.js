@@ -9,7 +9,7 @@ const typesMap = {
 
 const map = document.querySelector(`.map`);
 const mapFilters = map.querySelector(`.map__filters-container`);
-const cardTemplate = document.getElementById(`card`)
+const cardTemplate = document.querySelector(`#card`)
 .content
 .querySelector(`.map__card`);
 
@@ -53,7 +53,7 @@ const checkNullInCard = (card) => {
   }
 };
 
-const makeCard = (offerData) => {
+const make = (offerData) => {
   const {offer, author} = offerData;
   const {
     title,
@@ -94,36 +94,36 @@ const makeCard = (offerData) => {
   return card;
 };
 
-const showCard = (offer) => {
-  closeCurrentCard();
-  const card = makeCard(offer);
+const show = (offer) => {
+  closeCurrent();
+  const card = make(offer);
   const cardClose = card.querySelector(`.popup__close`);
 
   map.insertBefore(card, mapFilters);
 
-  document.addEventListener(`keydown`, closePopup);
-  cardClose.addEventListener(`click`, closePopup);
+  document.addEventListener(`keydown`, onCardClose);
+  cardClose.addEventListener(`click`, onCardClose);
 };
 
-const closePopup = (evt) => {
+const onCardClose = (evt) => {
   if (evt.key === `Escape` || evt.button === 0) {
-    closeCurrentCard();
+    closeCurrent();
   }
 };
 
-const closeCurrentCard = () => {
+const closeCurrent = () => {
   const currentCard = map.querySelector(`.map__card`);
 
   if (currentCard) {
-    document.removeEventListener(`keydown`, closePopup);
+    document.removeEventListener(`keydown`, onCardClose);
     currentCard.remove();
   }
 };
 
 window.card = {
-  makeCard,
-  showCard,
-  closeCurrentCard
+  make,
+  show,
+  closeCurrent
 };
 
 

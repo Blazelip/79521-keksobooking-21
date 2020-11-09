@@ -2,16 +2,16 @@
 
 const pinBoard = document.querySelector(`.map__pins`);
 
-const errorMsgTemplate = document.getElementById(`error`)
+const errorMsgTemplate = document.querySelector(`#error`)
 .content
 .querySelector(`.error`);
 
-const successMsgTemplate = document.getElementById(`success`)
+const successMsgTemplate = document.querySelector(`#success`)
 .content
 .querySelector(`.success`);
 
 
-const showErrorMsg = (errorMsg) => {
+const showError = (errorMsg) => {
   const node = errorMsgTemplate.cloneNode(true);
   const text = node.querySelector(`.error__message`);
 
@@ -38,7 +38,7 @@ const showErrorMsg = (errorMsg) => {
   node.addEventListener(`click`, onMessageClick);
 };
 
-const showSuccessMsg = () => {
+const showSuccess = () => {
   const node = successMsgTemplate.cloneNode(true);
   pinBoard.appendChild(node);
 
@@ -55,6 +55,6 @@ const showSuccessMsg = () => {
 };
 
 window.statusMsg = {
-  showErrorMsg,
-  showSuccessMsg
+  showError,
+  showSuccess
 };
