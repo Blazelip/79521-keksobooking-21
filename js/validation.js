@@ -54,7 +54,7 @@ const onPriceInput = () => {
   priceField.reportValidity();
 };
 
-const roomsFieldChecker = () => {
+const onRoomsChange = () => {
   const room = parseInt(roomField.value, 10);
   const person = parseInt(guestField.value, 10);
 
@@ -80,23 +80,23 @@ const setMinPrice = () => {
   priceField.placeholder = `${minPrice}`;
 };
 
-const onTimeFieldsHandler = (evt) => {
+const onTimeFiledsChange = (evt) => {
   checkinField.value = evt.target.value;
   checkoutField.value = evt.target.value;
 };
 
 titleField.addEventListener(`change`, onTitleInput);
 priceField.addEventListener(`change`, onPriceInput);
-roomField.addEventListener(`change`, roomsFieldChecker);
-guestField.addEventListener(`change`, roomsFieldChecker);
+roomField.addEventListener(`change`, onRoomsChange);
+guestField.addEventListener(`change`, onRoomsChange);
 
 typeField.addEventListener(`change`, () => {
   setMinPrice();
 });
 
-timeFieldset.addEventListener(`change`, onTimeFieldsHandler);
+timeFieldset.addEventListener(`change`, onTimeFiledsChange);
 
 window.validation = {
   setMinPrice,
-  roomsFieldChecker
+  onRoomsChange
 };

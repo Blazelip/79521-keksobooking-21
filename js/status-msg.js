@@ -22,10 +22,9 @@ const showErrorMsg = (errorMsg) => {
   const onStatusClose = () => {
     node.remove();
     document.removeEventListener(`keydown`, onDocumentPressEsc);
-    document.removeEventListener(`click`, onDocumentClick);
   };
 
-  const onDocumentClick = () => {
+  const onMessageClick = () => {
     onStatusClose();
   };
 
@@ -36,7 +35,7 @@ const showErrorMsg = (errorMsg) => {
   };
 
   document.addEventListener(`keydown`, onDocumentPressEsc);
-  document.addEventListener(`click`, onDocumentClick);
+  node.addEventListener(`click`, onMessageClick);
 };
 
 const showSuccessMsg = () => {
@@ -49,11 +48,10 @@ const showSuccessMsg = () => {
     }
 
     document.removeEventListener(`keydown`, onStatusModalClose);
-    document.removeEventListener(`click`, onStatusModalClose);
   };
 
   document.addEventListener(`keydown`, onStatusModalClose);
-  document.addEventListener(`click`, onStatusModalClose);
+  node.addEventListener(`click`, onStatusModalClose);
 };
 
 window.statusMsg = {
