@@ -64,7 +64,7 @@ const onRoomsChange = () => {
   if (room === ROOMS_MAX && person !== GUESTS_MIN) {
     guestField.setCustomValidity(`100 комнат, это шо, дворец по-твоему? Выбирай "Не для гостей"`);
   } else if (person === GUESTS_MIN && room !== ROOMS_MAX) {
-    guestField.setCustomValidity(`Не для гостей подходит только 100 комнат, бро`);
+    guestField.setCustomValidity(`Не для гостей подходит только 100 комнат`);
   } else if (room < person) {
     guestField.setCustomValidity(`Количество комнат не должно быть меньше числа персон`);
   } else {
