@@ -171,7 +171,7 @@ window.pin = {
   make: makePin,
   render: renderPins,
   onClick: onPinClick,
-  moveMain: moveMainPin,
+  onMainMove: moveMainPin,
   delete: deletePins,
   removeActiveClass
 };

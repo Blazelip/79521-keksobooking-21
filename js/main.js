@@ -33,7 +33,7 @@ const deactivateApp = () => {
   map.classList.add(`map--faded`);
 
   window.form.disable();
-  mainPin.addEventListener(`mousedown`, window.pin.moveMain);
+  mainPin.addEventListener(`mousedown`, window.pin.onMainMove);
   mainPin.addEventListener(`mousedown`, onMainPinClick);
   mainPin.addEventListener(`keydown`, onMainPinClick);
   pinBoard.removeEventListener(`click`, window.pin.onClick);

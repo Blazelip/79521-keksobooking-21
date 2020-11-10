@@ -6,7 +6,7 @@ const MAIN_PIN_TALE = 22;
 
 const FILE_TYPES = [`jpg`, `jpeg`, `png`];
 
-const DEFAULT_USERPIC_URL = `/img/muffin-grey.svg`;
+const DEFAULT_USERPIC_URL = `img/muffin-grey.svg`;
 
 const mainPin = document.querySelector(`.map__pin--main`);
 const adForm = document.querySelector(`.ad-form`);
