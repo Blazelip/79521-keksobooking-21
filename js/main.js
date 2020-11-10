@@ -6,7 +6,7 @@ const pinBoard = document.querySelector(`.map__pins`);
 
 const onSuccessLoadData = (serverData) => {
   window.dataWithId = window.util.addIdToSourceData(serverData);
-  window.pin.render(window.filter.sortData(window.dataWithId));
+  window.pin.render(window.filter.getData(window.dataWithId));
 };
 
 const onFailedRequest = (errorMsg) => {
@@ -26,7 +26,7 @@ const activateApp = () => {
   window.form.enable();
   mainPin.removeEventListener(`mousedown`, onMainPinClick);
   mainPin.removeEventListener(`keydown`, onMainPinClick);
-  pinBoard.addEventListener(`click`, window.pin.onPinClick);
+  pinBoard.addEventListener(`click`, window.pin.onClick);
 };
 
 const deactivateApp = () => {
@@ -36,7 +36,7 @@ const deactivateApp = () => {
   mainPin.addEventListener(`mousedown`, window.pin.moveMain);
   mainPin.addEventListener(`mousedown`, onMainPinClick);
   mainPin.addEventListener(`keydown`, onMainPinClick);
-  pinBoard.removeEventListener(`click`, window.pin.onPinClick);
+  pinBoard.removeEventListener(`click`, window.pin.onClick);
 };
 
 deactivateApp();

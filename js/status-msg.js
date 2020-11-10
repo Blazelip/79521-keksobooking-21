@@ -11,7 +11,7 @@ const successMsgTemplate = document.querySelector(`#success`)
 .querySelector(`.success`);
 
 
-const showError = (errorMsg) => {
+const showErrorMsg = (errorMsg) => {
   const node = errorMsgTemplate.cloneNode(true);
   const text = node.querySelector(`.error__message`);
 
@@ -38,7 +38,7 @@ const showError = (errorMsg) => {
   node.addEventListener(`click`, onMessageClick);
 };
 
-const showSuccess = () => {
+const showSuccessMsg = () => {
   const node = successMsgTemplate.cloneNode(true);
   pinBoard.appendChild(node);
 
@@ -55,6 +55,6 @@ const showSuccess = () => {
 };
 
 window.statusMsg = {
-  showError,
-  showSuccess
+  showError: showErrorMsg,
+  showSuccess: showSuccessMsg
 };

@@ -53,7 +53,7 @@ const checkNullInCard = (card) => {
   }
 };
 
-const make = (offerData) => {
+const makeCard = (offerData) => {
   const {offer, author} = offerData;
   const {
     title,
@@ -94,9 +94,9 @@ const make = (offerData) => {
   return card;
 };
 
-const show = (offer) => {
-  closeCurrent();
-  const card = make(offer);
+const showCard = (offer) => {
+  closeCurrentCard();
+  const card = makeCard(offer);
   const cardClose = card.querySelector(`.popup__close`);
 
   map.insertBefore(card, mapFilters);
@@ -107,11 +107,12 @@ const show = (offer) => {
 
 const onCardClose = (evt) => {
   if (evt.key === `Escape` || evt.button === 0) {
-    closeCurrent();
+    closeCurrentCard();
+    window.pin.removeActiveClass();
   }
 };
 
-const closeCurrent = () => {
+const closeCurrentCard = () => {
   const currentCard = map.querySelector(`.map__card`);
 
   if (currentCard) {
@@ -121,9 +122,8 @@ const closeCurrent = () => {
 };
 
 window.card = {
-  make,
-  show,
-  closeCurrent
+  show: showCard,
+  closeCurrent: closeCurrentCard
 };
 
 

@@ -32,12 +32,12 @@ const pinTemplate = document.querySelector(`#pin`)
 .content
 .querySelector(`.map__pin`);
 
-const resetMain = () => {
+const resetMainPinCoord = () => {
   mainPin.style.left = `${MAIN_PIN_DEFAULT_X}px`;
   mainPin.style.top = `${MAIN_PIN_DEFAULT_Y}px`;
 };
 
-const make = (offerData) => {
+const makePin = (offerData) => {
   if (offerData.offer === ``) {
     return null;
   }
@@ -54,11 +54,11 @@ const make = (offerData) => {
   return node;
 };
 
-const render = (offers) => {
+const renderPins = (offers) => {
   const fragment = document.createDocumentFragment();
 
   offers.forEach((offer) => {
-    const currentPin = make(offer);
+    const currentPin = makePin(offer);
     if (currentPin) {
       fragment.appendChild(currentPin);
     }
@@ -68,7 +68,7 @@ const render = (offers) => {
   pinBoard.appendChild(fragment);
 };
 
-const deleteMarks = () => {
+const deletePins = () => {
   const pins = pinBoard.querySelectorAll(`.map__pin:not(.map__pin--main)`);
 
   pins.forEach((pin) => {
@@ -90,13 +90,24 @@ const onPinClick = (evt) => {
       });
 
       if (offer) {
+        removeActiveClass();
+        const pin = target.closest(`.map__pin`);
+        pin.classList.add(`map__pin--active`);
         window.card.show(offer);
       }
     }
   }
 };
 
-const moveMain = (evt) => {
+const removeActiveClass = () => {
+  const activePins = pinBoard.querySelectorAll(`.map__pin--active`);
+
+  activePins.forEach((item) => {
+    item.classList.remove(`map__pin--active`);
+  });
+};
+
+const moveMainPin = (evt) => {
   evt.preventDefault();
 
   let startCoords = {
@@ -156,10 +167,11 @@ const moveMain = (evt) => {
 };
 
 window.pin = {
-  resetMain,
-  make,
-  render,
-  onPinClick,
-  moveMain,
-  deleteMarks
+  resetMain: resetMainPinCoord,
+  make: makePin,
+  render: renderPins,
+  onClick: onPinClick,
+  moveMain: moveMainPin,
+  delete: deletePins,
+  removeActiveClass
 };

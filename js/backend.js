@@ -1,6 +1,6 @@
 'use strict';
 
-const API_URL = `https://21.javascript.pages.academy/keksobooking/`;
+const API_URL = `https://21.javascript.pages.academy/keksobooking`;
 
 const TIMEOUT_IN_MS = 10000;
 
@@ -33,7 +33,7 @@ const getData = (onLoad, onError) => {
 
   getServerResponse(xhr, onLoad, onError);
 
-  xhr.open(`GET`, `${API_URL}data`);
+  xhr.open(`GET`, `${API_URL}/data`);
   xhr.send();
 };
 

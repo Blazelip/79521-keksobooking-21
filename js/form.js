@@ -61,7 +61,7 @@ const calcPinAddress = (isActivePage) => {
 
 const onSuccessSendForm = () => {
   window.card.closeCurrent();
-  window.pin.deleteMarks();
+  window.pin.delete();
   mapFilters.reset();
   adForm.reset();
   userPicPreview.src = DEFAULT_USERPIC_URL;
@@ -77,7 +77,7 @@ const onFailedRequest = (errorMsg) => {
 
 const onResetBtnClick = () => {
   window.card.closeCurrent();
-  window.pin.deleteMarks();
+  window.pin.delete();
   mapFilters.reset();
   adForm.reset();
   userPicPreview.src = DEFAULT_USERPIC_URL;
@@ -86,7 +86,7 @@ const onResetBtnClick = () => {
   window.main.deactivateApp();
 };
 
-const disable = () => {
+const disableForm = () => {
   adForm.classList.add(`ad-form--disabled`);
   formElementsSwitcher(formFieldsets, true);
   formElementsSwitcher(mapFilterItems, true);
@@ -95,7 +95,7 @@ const disable = () => {
   formReset.removeEventListener(`click`, onResetBtnClick);
 };
 
-const enable = () => {
+const enableForm = () => {
   adForm.classList.remove(`ad-form--disabled`);
   formElementsSwitcher(formFieldsets, false);
   formElementsSwitcher(mapFilterItems, false);
@@ -116,6 +116,6 @@ adForm.addEventListener(`submit`, (evt) => {
 
 window.form = {
   calcPinAddress,
-  disable,
-  enable
+  disable: disableForm,
+  enable: enableForm
 };

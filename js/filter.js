@@ -89,7 +89,7 @@ const filterHouseFeatures = (item) => {
   });
 };
 
-const sortData = (offers) => {
+const filterData = (offers) => {
   const filteredData = [];
 
   for (let i = 0; i < offers.length && filteredData.length < MAX_PIN_AMOUNT; i++) {
@@ -109,12 +109,12 @@ const sortData = (offers) => {
 
 const onFiltersFormChange = () => {
   window.card.closeCurrent();
-  window.pin.deleteMarks();
-  window.pin.render(sortData(window.dataWithId));
+  window.pin.delete();
+  window.pin.render(filterData(window.dataWithId));
 };
 
 filtersForm.addEventListener(`change`, window.util.debounce(onFiltersFormChange));
 
 window.filter = {
-  sortData
+  getData: filterData
 };
